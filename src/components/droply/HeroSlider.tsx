@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowUpRight, ChevronLeft, ChevronRight, Check, Star, Leaf, Percent } from "lucide-react";
 import { DISSOLVE_VIDEO, HERO_IMAGE, BANNER_SALE, BANNER_BEST, BANNER_ECO } from "@/lib/droply-data";
+import { SHOP } from "@/lib/shop-config";
 
 type Badge = { label: string; tone: "sale" | "star" | "eco" };
 type Cta = { label: string; to: string; primary?: boolean };
@@ -27,13 +28,13 @@ const SLIDES: Slide[] = [
     kicker: "Šumivé čistiace tablety",
     title: (
       <>
-        Vyčistíš celý dom.
+        Plná fľaša čističa.
         <br />
         Z jednej <span className="text-accent-glow">tablety.</span>
       </>
     ),
-    text: "Hodíš do fľaše s vodou a o dve minúty máš plnohodnotný čistiaci prostriedok. Bez plastu navyše.",
-    note: "4,9/5 · 10 000+ spokojných domácností",
+    text: "Hodíš ju do fľaše s vodou a o dve minúty čistíš. Kuchyňa, kúpeľňa, okná, podlaha aj prach.",
+    note: `Doprava zdarma od ${SHOP.freeShippingFrom} € · odoslanie ${SHOP.dispatch}`,
     ctas: [
       { label: "Objaviť produkty", to: "/produkty", primary: true },
       { label: "Ako to funguje", to: "/ako-funguje" },
@@ -42,35 +43,35 @@ const SLIDES: Slide[] = [
   {
     kind: "image",
     media: BANNER_SALE,
-    badge: { label: "Akcia · −35 %", tone: "sale" },
+    badge: { label: "Skúšobný balíček", tone: "sale" },
     title: (
       <>
-        Prvá objednávka
+        Vyskúšaj Droply
         <br />
-        lacnejšie o <span className="text-accent-glow">tretinu</span>
+        za <span className="text-accent-glow">9,90 €</span>
       </>
     ),
-    text: "Vyskúšaj Droply za zlomok ceny. Zľava −35 % sa pridá automaticky pri prvom nákupe.",
-    note: "Doprava zdarma nad 25 € · 30 dní na vrátenie",
+    text: "10 tabliet podľa výberu a fľaša s rozprašovačom. Zistíš, ktoré vône a druhy ti sadnú, skôr než kúpiš viac.",
+    note: `${SHOP.returnDays} dní na vrátenie · platba kartou, prevodom aj dobierkou`,
     ctas: [
-      { label: "Chcem zľavu", to: "/balicky", primary: true },
+      { label: "Vyskladať balíček", to: "/balicky", primary: true },
       { label: "Pozrieť produkty", to: "/produkty" },
     ],
   },
   {
     kind: "image",
     media: BANNER_BEST,
-    badge: { label: "Bestseller", tone: "star" },
+    badge: { label: "Začni týmto", tone: "star" },
     title: (
       <>
         Univerzál —<br />
         poradí si so <span className="text-accent-glow">všetkým</span>
       </>
     ),
-    text: "Jedna tableta nahradí plnú fľašu čističa. Náš najpredávanejší produkt.",
-    note: "Hodnotenie 4,9/5 · 1 243 recenzií",
+    text: "Kuchynská linka, stôl, chladnička aj spotrebiče. Z jednej tablety je plná fľaša čističa.",
+    note: "10 tabliet = 10 fliaš čističa po 500 ml",
     ctas: [
-      { label: "Kúpiť Univerzál", to: "/produkty#univerzal", primary: true },
+      { label: "Kúpiť Univerzál", to: "/produkty/univerzal-bavlna", primary: true },
       { label: "Celá ponuka", to: "/produkty" },
     ],
   },
@@ -85,11 +86,11 @@ const SLIDES: Slide[] = [
         <span className="text-accent-glow">Viac čistoty.</span>
       </>
     ),
-    text: "Jedna domácnosť ušetrí s Droply desiatky plastových fliaš ročne. Malá tableta, veľký rozdiel.",
-    note: "100 % recyklovateľné obaly · vyrobené v EÚ",
+    text: "Fľašu používaš stále dokola a domov nosíš len krabičku tabliet. Vodu máš z vodovodu.",
+    note: "Jedna fľaša na roky namiesto novej pri každom nákupe",
     ctas: [
       { label: "Prečo Droply", to: "/ako-funguje", primary: true },
-      { label: "Spočítať úsporu", to: "/ako-funguje" },
+      { label: "Spočítať úsporu", to: "/ako-funguje#kalkulacka" },
     ],
   },
 ];
@@ -149,7 +150,7 @@ export default function HeroSlider() {
   }, [emblaApi, play, stop]);
 
   return (
-    <section id="top" className="relative h-[100svh] min-h-[600px] w-full overflow-hidden bg-secondary" onMouseEnter={stop} onMouseLeave={play}>
+    <section id="top" aria-roledescription="carousel" aria-label="Novinky Droply" className="relative h-[100svh] min-h-[600px] w-full overflow-hidden bg-secondary" onMouseEnter={stop} onMouseLeave={play}>
       <div className="h-full overflow-hidden" ref={emblaRef}>
         <div className="flex h-full">
           {SLIDES.map((s, i) => (
@@ -163,12 +164,12 @@ export default function HeroSlider() {
                   muted
                   loop
                   playsInline
-                  preload="auto"
+                  preload="metadata"
                   // @ts-expect-error iOS
                   webkit-playsinline="true"
                 />
               ) : (
-                <img src={s.media} alt="" className="absolute inset-0 h-full w-full object-cover object-[72%_center] sm:object-center" />
+                <img src={s.media} alt="" loading={i === 0 ? "eager" : "lazy"} decoding="async" className="absolute inset-0 h-full w-full object-cover object-[72%_center] sm:object-center" />
               )}
 
               {/* Prekrytie: mobil tmavší dole (fotka hore vidieť), desktop gradient zľava */}
@@ -180,9 +181,15 @@ export default function HeroSlider() {
                 <div className="container-tight">
                   <div className="max-w-2xl">
                     {s.badge ? <BadgePill badge={s.badge} /> : <span className="kicker !text-white/70 before:!bg-accent">{s.kicker}</span>}
-                    <h1 className="mt-5 font-display text-[12vw] font-extrabold leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
-                      {s.title}
-                    </h1>
+                    {i === 0 ? (
+                      <h1 className="mt-5 font-display text-[12vw] font-extrabold leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
+                        {s.title}
+                      </h1>
+                    ) : (
+                      <h2 className="mt-5 font-display text-[12vw] font-extrabold leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
+                        {s.title}
+                      </h2>
+                    )}
                     <p className="mt-5 max-w-lg text-lg leading-relaxed text-white/85">{s.text}</p>
                     {s.note && (
                       <p className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-white/70">

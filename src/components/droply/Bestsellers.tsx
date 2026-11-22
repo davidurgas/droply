@@ -10,9 +10,9 @@ export default function Bestsellers() {
       <div className="container-tight">
         <Reveal className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <span className="kicker">Najobľúbenejšie</span>
+            <span className="kicker">Odporúčame</span>
             <h2 className="mt-4 font-display text-3xl font-bold leading-tight sm:text-5xl">
-              Bestsellery, ktoré <span className="font-accent">milujú</span> domácnosti
+              Odkiaľ <span className="font-accent">začať</span>
             </h2>
           </div>
           <Link to="/produkty" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline">

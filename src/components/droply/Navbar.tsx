@@ -4,13 +4,14 @@ import { ShoppingBag, Menu, X, Truck, Droplet, User } from "lucide-react";
 import Logo from "./Logo";
 import { useCart } from "./cart-context";
 import { useAccount } from "./account-context";
+import { SHOP } from "@/lib/shop-config";
 
 const LINKS = [
   { to: "/", label: "Domov" },
   { to: "/produkty", label: "Produkty" },
   { to: "/ako-funguje", label: "Ako to funguje" },
   { to: "/balicky", label: "Balíčky" },
-  { to: "/recenzie", label: "Recenzie" },
+  { to: "/otazky", label: "Otázky" },
 ];
 
 export default function Navbar() {
@@ -33,10 +34,15 @@ export default function Navbar() {
       <div className="relative z-50 overflow-hidden bg-secondary text-secondary-foreground">
         <div className="container-tight flex items-center justify-center gap-2 py-2 text-center text-[13px] font-medium">
           <Truck className="h-4 w-4 text-accent" />
-          <span>
-            <strong className="text-accent">Doprava ZDARMA</strong> nad 25 € · uvádzacia zľava{" "}
-            <strong className="text-accent">−35 %</strong> na prvú objednávku
-          </span>
+          {SHOP.launched ? (
+            <span>
+              <strong className="text-accent">Doprava zdarma</strong> od {SHOP.freeShippingFrom} € · odoslanie {SHOP.dispatch}
+            </span>
+          ) : (
+            <span>
+              <strong className="text-accent">Ukážka e-shopu</strong> · objednávky zatiaľ neprijímame
+            </span>
+          )}
         </div>
       </div>
 
@@ -91,7 +97,8 @@ export default function Navbar() {
             <button
               className="grid h-10 w-10 place-items-center rounded-full text-foreground md:hidden"
               onClick={() => setMobileOpen((v) => !v)}
-              aria-label="Menu"
+              aria-label={mobileOpen ? "Zavrieť menu" : "Otvoriť menu"}
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>

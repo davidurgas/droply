@@ -35,8 +35,15 @@ jobs:
           VITE_BASE: /droply/
         run: npm run build
 
+      - name: Prerender (HTML pre vyhľadávače a sociálne siete)
+        env:
+          VITE_BASE: /droply/
+        run: |
+          npx playwright install --with-deps chromium
+          node scripts/prerender.mjs
+
       - name: SPA fallback (404 = index)
-        run: cp dist/index.html dist/404.html
+        run: test -f dist/404.html || cp dist/index.html dist/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

@@ -1,11 +1,12 @@
 import { ShieldCheck, Truck, Undo2, Headphones } from "lucide-react";
 import Reveal from "./Reveal";
+import { SHOP } from "@/lib/shop-config";
 
 const ITEMS = [
-  { icon: Undo2, title: "30 dní na vrátenie", text: "Nespokojnosť? Vrátime ti peniaze bez otázok." },
-  { icon: Truck, title: "Doprava zdarma", text: "Pri objednávke nad 25 € neplatíš za dopravu." },
-  { icon: ShieldCheck, title: "Kvalita z EU", text: "Formulácie testované a vyrábané v Európskej únii." },
-  { icon: Headphones, title: "Podpora 7/7", text: "Ozveme sa ti do pár hodín, každý deň v týždni." },
+  { icon: Undo2, title: `${SHOP.returnDays} dní na vrátenie`, text: "Tovar môžeš vrátiť bez udania dôvodu." },
+  { icon: Truck, title: "Doprava zdarma", text: `Pri objednávke od ${SHOP.freeShippingFrom} € neplatíš za dopravu.` },
+  { icon: ShieldCheck, title: "Zloženie na očiach", text: "Pri každom produkte zloženie, návod a bezpečnostné upozornenia." },
+  { icon: Headphones, title: "Odpovieme rýchlo", text: `Na e-maily odpovedáme ${SHOP.supportReply}.` },
 ];
 
 export default function Guarantee() {

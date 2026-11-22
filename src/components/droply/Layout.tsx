@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import CartDrawer from "./CartDrawer";
 import AccountDrawer from "./AccountDrawer";
 import SupportChat from "./SupportChat";
+import ConsentBanner from "./ConsentBanner";
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -29,13 +30,14 @@ export default function Layout() {
     <div className="min-h-screen bg-background">
       <ScrollToTop />
       <Navbar />
-      <main>
+      <main id="obsah">
         <Outlet />
       </main>
       <Footer />
       <CartDrawer />
       <AccountDrawer />
       <SupportChat />
+      <ConsentBanner />
     </div>
   );
 }

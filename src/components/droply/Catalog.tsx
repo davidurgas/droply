@@ -1,4 +1,5 @@
-import { Sparkles, UtensilsCrossed, PanelTop, ShowerHead, Footprints, Shirt } from "lucide-react";
+import { Sparkles, UtensilsCrossed, PanelTop, ShowerHead, Footprints, Wind } from "lucide-react";
+import { PACK_TABLETS } from "@/lib/droply-data";
 import { categories, productsByCategory, type IconKey } from "@/lib/droply-data";
 import ProductCard from "./ProductCard";
 import Reveal from "./Reveal";
@@ -9,7 +10,7 @@ const ICONS: Record<IconKey, typeof Sparkles> = {
   glass: PanelTop,
   bathroom: ShowerHead,
   floor: Footprints,
-  laundry: Shirt,
+  dust: Wind,
 };
 
 export default function Catalog() {
@@ -22,7 +23,7 @@ export default function Catalog() {
             Vyskladaj si <span className="font-accent">domácnosť</span>
           </h1>
           <p className="mt-3 text-muted-foreground">
-            Vyber kategóriu a v nej vôňu či funkciu, ktorá ti sadne. Každé balenie = 10 šumivých tabliet.
+            Vyber kategóriu a v nej vôňu, ktorá ti sadne. Každé balenie má {PACK_TABLETS} tabliet, z každej je plná fľaša čističa.
           </p>
         </Reveal>
 
@@ -53,7 +54,7 @@ export default function Catalog() {
                     <h2 className="font-display text-2xl font-bold">{c.name}</h2>
                     <p className="text-sm text-muted-foreground">{c.tagline}</p>
                   </div>
-                  <span className="ml-auto hidden text-sm text-muted-foreground sm:block">{items.length} vôní</span>
+                  <span className="ml-auto hidden text-sm text-muted-foreground sm:block">{items.length} {items.length === 1 ? "variant" : items.length < 5 ? "varianty" : "variantov"}</span>
                 </Reveal>
                 <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {items.map((p, i) => (

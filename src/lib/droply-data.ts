@@ -1,5 +1,7 @@
-export type CategoryId = "univerzal" | "kuchyna" | "sklo" | "kupelna" | "podlahy" | "pranie";
-export type IconKey = "universal" | "kitchen" | "glass" | "bathroom" | "floor" | "laundry";
+import { SHOP } from "./shop-config";
+
+export type CategoryId = "univerzal" | "kuchyna" | "sklo" | "kupelna" | "podlahy" | "prach";
+export type IconKey = "universal" | "kitchen" | "glass" | "bathroom" | "floor" | "dust";
 
 export type Category = {
   id: CategoryId;
@@ -7,6 +9,14 @@ export type Category = {
   tagline: string;
   image: string;
   icon: IconKey;
+  /** na čo sa hodí */
+  surfaces: string;
+  /** na čo nepoužívať */
+  notFor: string;
+  /** ako pripraviť */
+  howTo: string;
+  /** čo vznikne z 1 tablety */
+  yieldPerTablet: string;
 };
 
 export type Product = {
@@ -17,19 +27,17 @@ export type Product = {
   tagline: string;
   image: string;
   price: number;
-  /** pôvodná (prečiarknutá) cena — kotvenie / anchoring */
-  compareAt: number;
-  /** koľko fliaš nahradí jedno balenie (10 tabliet) */
-  replacesBottles: number;
-  rating: number;
-  reviews: number;
-  /** simulovaná dostupnosť pre efekt vzácnosti */
-  stock: number;
   badge?: string;
-  bestseller?: boolean;
+  /** zobrazí sa na úvodnej stránke medzi odporúčanými */
+  featured?: boolean;
 };
 
-/** Reálne fotografie (Higgsfield CDN) — pre demo. V ostrej verzii nahradiť vlastnými. */
+/** Počet tabliet v jednom balení a jeho cena – zmena tu sa prejaví všade. */
+export const PACK_TABLETS = 10;
+export const PACK_PRICE = 8.9;
+export const perTablet = (price: number, tablets = PACK_TABLETS) => price / tablets;
+
+/** Fotografie (Higgsfield CDN). Kategória „Prach“ zatiaľ používa fotku Univerzálu – treba vlastnú fotku. */
 const CDN = "https://d8j0ntlcm91z4.cloudfront.net/user_3AhuqzP4VjgsdpfdOEJfJ1mDnzs";
 const IMG = {
   universal: `${CDN}/hf_20260818_160205_83d992e0-bb23-4d57-8f4e-903f5efc0a0a.png`,
@@ -37,7 +45,6 @@ const IMG = {
   glass: `${CDN}/hf_20260818_160206_b18f01e1-f024-4468-82c5-fd6ccd9f1849.png`,
   bathroom: `${CDN}/hf_20260818_160205_dd7bdbc6-250a-45ab-b153-c01d3ba7ad40.png`,
   floor: `${CDN}/hf_20260818_160206_4a8c5061-2834-46fe-be0d-0d8949234143.png`,
-  laundry: `${CDN}/hf_20260818_160205_52111eb2-a24d-430c-aaa1-6d72f40e9c54.png`,
 };
 
 /** Hero video – logo vytlačené zvislo na plastovej fľaši, tableta sa reálne rozpúšťa (Higgsfield CDN). */
@@ -49,9 +56,6 @@ export const DISSOLVE_VIDEO_WHITE = `${CDN}/hf_20260820_070820_cd0ed9cc-a420-452
 /** Široká hero fotka (rozprašovacia fľaša + tablety). */
 export const HERO_IMAGE = `${CDN}/hf_20260818_160205_4fea7fac-bc32-4ae7-a3f0-97435a2b522d.png`;
 
-/** Fotka zákazníckej podpory + meno. */
-export const SUPPORT_IMAGE = `${CDN}/hf_20260820_084036_d9d27321-67f7-482b-9edd-920e57efc9ce.png`;
-export const SUPPORT_NAME = "Klára";
 
 /** Reklamné bannery pre hero slider (16:9, produkt vpravo, miesto na text vľavo). */
 export const BANNER_SALE = `${CDN}/hf_20260819_154949_f35dade2-7d66-435e-afa4-6c6bd15d9953.png`;
@@ -59,12 +63,48 @@ export const BANNER_BEST = `${CDN}/hf_20260819_155148_2b1f96c0-f338-43b0-af6e-c4
 export const BANNER_ECO = `${CDN}/hf_20260819_154949_0332d10c-aad3-48d9-8629-4bd103515797.png`;
 
 export const categories: Category[] = [
-  { id: "univerzal", name: "Univerzál", tagline: "Jedna tableta na (takmer) všetko v domácnosti", image: IMG.universal, icon: "universal" },
-  { id: "kuchyna", name: "Kuchyňa", tagline: "Odmasťovače a čističe do kuchyne", image: IMG.kitchen, icon: "kitchen" },
-  { id: "sklo", name: "Okná & sklo", tagline: "Bez šmúh a bez rozprašovania litrov chémie", image: IMG.glass, icon: "glass" },
-  { id: "kupelna", name: "Kúpeľňa", tagline: "Vodný kameň a usadeniny nemajú šancu", image: IMG.bathroom, icon: "bathroom" },
-  { id: "podlahy", name: "Podlahy", tagline: "Rýchloschnúce na laminát, dlažbu aj drevo", image: IMG.floor, icon: "floor" },
-  { id: "pranie", name: "Pranie", tagline: "Koncentrované pracie tablety priamo do bubna", image: IMG.laundry, icon: "laundry" },
+  {
+    id: "univerzal", name: "Univerzál", tagline: "Linka, stôl, chladnička, spotrebiče", image: IMG.universal, icon: "universal",
+    surfaces: "Kuchynská linka, stoly, chladnička, mikrovlnka, umývateľné steny, plasty a lakované povrchy.",
+    notFor: "Neošetrené drevo, mramor a prírodný kameň.",
+    howTo: "Naplň fľašu 500 ml vlažnou vodou, vhoď tabletu, nechaj rozpustiť a až potom nasaď rozprašovač.",
+    yieldPerTablet: "500 ml čističa",
+  },
+  {
+    id: "kuchyna", name: "Kuchyňa", tagline: "Mastnota na sporáku, digestore a obkladoch", image: IMG.kitchen, icon: "kitchen",
+    surfaces: "Sporák, digestor, obklady za linkou, rúra zvonka, drez.",
+    notFor: "Hliník, mramor a prírodný kameň. Nepoužívaj na horúce povrchy.",
+    howTo: "Naplň fľašu 500 ml vlažnou vodou, vhoď tabletu, nechaj rozpustiť. Na pripálenú mastnotu nechaj pôsobiť 2–3 minúty.",
+    yieldPerTablet: "500 ml čističa",
+  },
+  {
+    id: "sklo", name: "Okná & sklo", tagline: "Okná, zrkadlá a sklenené dvere bez šmúh", image: IMG.glass, icon: "glass",
+    surfaces: "Okná, zrkadlá, sprchové zásteny, sklenené stoly, vitríny.",
+    notFor: "Obrazovky a displeje s antireflexnou vrstvou.",
+    howTo: "Naplň fľašu 500 ml vodou, vhoď tabletu, nechaj rozpustiť. Utieraj suchou mikrohandričkou.",
+    yieldPerTablet: "500 ml čističa",
+  },
+  {
+    id: "kupelna", name: "Kúpeľňa", tagline: "Vodný kameň a mydlové usadeniny", image: IMG.bathroom, icon: "bathroom",
+    surfaces: "Batérie, umývadlo, vaňa, sprchový kút, obklady, WC.",
+    notFor: "Mramor, prírodný kameň a smaltované povrchy s poškodenou glazúrou (prípravok je kyslý).",
+    howTo: "Naplň fľašu 500 ml vodou, vhoď tabletu, nechaj rozpustiť. Na vodný kameň nechaj pôsobiť 5 minút a opláchni.",
+    yieldPerTablet: "500 ml čističa",
+  },
+  {
+    id: "podlahy", name: "Podlahy", tagline: "Dlažba, vinyl aj laminát", image: IMG.floor, icon: "floor",
+    surfaces: "Dlažba, vinyl, laminát, lakované parkety.",
+    notFor: "Neošetrené a olejované drevo, koberce.",
+    howTo: "Vhoď 1 tabletu do vedra s 5 l vlažnej vody a nechaj rozpustiť. Mop dobre vyžmýkaj, nič neoplachuj.",
+    yieldPerTablet: "5 l roztoku na podlahu",
+  },
+  {
+    id: "prach", name: "Prach", tagline: "Skrinky a police, antistatický", image: IMG.universal, icon: "dust",
+    surfaces: "Nábytok, skrinky, police, TV stolík, parapety, plastové aj lakované povrchy.",
+    notFor: "Neošetrené drevo a obrazovky.",
+    howTo: "Naplň fľašu 500 ml vodou, vhoď tabletu, nechaj rozpustiť. Nastriekaj na handričku, nie priamo na nábytok.",
+    yieldPerTablet: "500 ml čističa",
+  },
 ];
 
 const IMG_BY_CAT: Record<CategoryId, string> = {
@@ -73,161 +113,104 @@ const IMG_BY_CAT: Record<CategoryId, string> = {
   sklo: IMG.glass,
   kupelna: IMG.bathroom,
   podlahy: IMG.floor,
-  pranie: IMG.laundry,
+  prach: IMG.universal,
 };
 
-type Variant = Omit<Product, "image" | "categoryId" | "tagline"> & { tagline?: string };
+type Variant = Omit<Product, "image" | "categoryId" | "tagline" | "price"> & { tagline?: string; price?: number };
 
 /** Skratka na vytvorenie variantov kategórie (zdieľajú fotku kategórie). */
 function cat(categoryId: CategoryId, tagline: string, variants: Variant[]): Product[] {
-  return variants.map((v) => ({ ...v, categoryId, image: IMG_BY_CAT[categoryId], tagline: v.tagline ?? tagline }));
+  return variants.map((v) => ({
+    ...v,
+    price: v.price ?? PACK_PRICE,
+    categoryId,
+    image: IMG_BY_CAT[categoryId],
+    tagline: v.tagline ?? tagline,
+  }));
 }
 
 export const products: Product[] = [
-  ...cat("univerzal", "Jedna tableta na (takmer) všetko v domácnosti", [
-    { id: "univerzal-bavlna", scent: "Sviežа bavlna", price: 4.9, compareAt: 7.9, replacesBottles: 5, rating: 4.9, reviews: 1243, stock: 38, badge: "Bestseller", bestseller: true },
-    { id: "univerzal-aloe", scent: "Aloe vera", price: 4.9, compareAt: 7.9, replacesBottles: 5, rating: 4.8, reviews: 521, stock: 47 },
-    { id: "univerzal-citrus", scent: "Citrus", price: 4.9, compareAt: 7.9, replacesBottles: 5, rating: 4.8, reviews: 388, stock: 33 },
+  ...cat("univerzal", "Jedna tableta na väčšinu povrchov v domácnosti", [
+    { id: "univerzal-bavlna", scent: "Svieža bavlna", featured: true, badge: "Začni týmto" },
+    { id: "univerzal-aloe", scent: "Aloe vera" },
+    { id: "univerzal-citrus", scent: "Citrus" },
   ]),
-  ...cat("kuchyna", "Odmasťovač, ktorý si poradí aj s pripáleným tukom", [
-    { id: "kuchyna-citrus", scent: "Citrus & limetka", price: 4.9, compareAt: 7.9, replacesBottles: 5, rating: 4.8, reviews: 862, stock: 24, badge: "Bestseller", bestseller: true },
-    { id: "kuchyna-grep", scent: "Grapefruit", price: 4.9, compareAt: 7.9, replacesBottles: 5, rating: 4.7, reviews: 274, stock: 40 },
-    { id: "kuchyna-bez", scent: "Bez parfumu · extra silný", price: 5.2, compareAt: 8.5, replacesBottles: 5, rating: 4.8, reviews: 199, stock: 18, badge: "Silný odmasťovač" },
+  ...cat("kuchyna", "Odmasťovač na sporák, digestor a obklady", [
+    { id: "kuchyna-citrus", scent: "Citrus & limetka", featured: true },
+    { id: "kuchyna-grep", scent: "Grapefruit" },
+    { id: "kuchyna-bez", scent: "Bez parfumu", badge: "Bez parfumu" },
   ]),
-  ...cat("sklo", "Bez šmúh a bez rozprašovania litrov chémie", [
-    { id: "sklo-bez", scent: "Bez parfumu · bez šmúh", price: 4.5, compareAt: 6.9, replacesBottles: 6, rating: 4.9, reviews: 517, stock: 51, badge: "Bez šmúh", bestseller: true },
-    { id: "sklo-sviezost", scent: "Sviežosť", price: 4.5, compareAt: 6.9, replacesBottles: 6, rating: 4.7, reviews: 233, stock: 44 },
+  ...cat("sklo", "Okná, zrkadlá a sklo bez šmúh", [
+    { id: "sklo-bez", scent: "Bez parfumu", featured: true, badge: "Bez parfumu" },
+    { id: "sklo-sviezost", scent: "Sviežosť" },
   ]),
-  ...cat("kupelna", "Vodný kameň a mydlové usadeniny nemajú šancu", [
-    { id: "kupelna-more", scent: "Morský vánok", price: 4.9, compareAt: 7.9, replacesBottles: 5, rating: 4.8, reviews: 634, stock: 12, badge: "Posledné kusy" },
-    { id: "kupelna-eukalyptus", scent: "Eukalyptus", price: 4.9, compareAt: 7.9, replacesBottles: 5, rating: 4.8, reviews: 341, stock: 36 },
-    { id: "kupelna-levandula", scent: "Levanduľa", price: 4.9, compareAt: 7.9, replacesBottles: 5, rating: 4.9, reviews: 288, stock: 29 },
+  ...cat("kupelna", "Vodný kameň a mydlové usadeniny", [
+    { id: "kupelna-more", scent: "Morský vánok" },
+    { id: "kupelna-eukalyptus", scent: "Eukalyptus" },
+    { id: "kupelna-levandula", scent: "Levanduľa" },
   ]),
-  ...cat("podlahy", "Rýchloschnúca formula pre laminát, dlažbu aj drevo", [
-    { id: "podlahy-eukalyptus", scent: "Eukalyptus", price: 4.9, compareAt: 7.9, replacesBottles: 6, rating: 4.7, reviews: 389, stock: 44 },
-    { id: "podlahy-citrus", scent: "Citrus", price: 4.9, compareAt: 7.9, replacesBottles: 6, rating: 4.7, reviews: 176, stock: 52 },
+  ...cat("podlahy", "1 tableta na celé vedro vody", [
+    { id: "podlahy-eukalyptus", scent: "Eukalyptus" },
+    { id: "podlahy-citrus", scent: "Citrus" },
   ]),
-  ...cat("pranie", "Koncentrované tablety – rozpustia sa priamo v bubne", [
-    { id: "pranie-levandula", scent: "Levanduľa", price: 5.9, compareAt: 9.9, replacesBottles: 4, rating: 4.9, reviews: 726, stock: 29, badge: "Novinka", bestseller: true },
-    { id: "pranie-bavlna", scent: "Sviežа bavlna", price: 5.9, compareAt: 9.9, replacesBottles: 4, rating: 4.8, reviews: 302, stock: 41 },
-    { id: "pranie-detsky", scent: "Detský · bez parfumu", price: 6.2, compareAt: 10.5, replacesBottles: 4, rating: 4.9, reviews: 158, stock: 22 },
+  ...cat("prach", "Utrie prach a spomalí jeho usadzovanie", [
+    { id: "prach-bez", scent: "Bez parfumu", featured: true, badge: "Novinka" },
+    { id: "prach-cedra", scent: "Céder" },
   ]),
 ];
 
 export const getCategory = (id: CategoryId) => categories.find((c) => c.id === id)!;
+export const getProduct = (id: string) => products.find((p) => p.id === id);
 export const productsByCategory = (id: CategoryId) => products.filter((p) => p.categoryId === id);
-export const bestsellers = products.filter((p) => p.bestseller);
-export const productFullName = (p: Product) => `Droply ${getCategory(p.categoryId).name} · ${p.scent}`;
+export const bestsellers = products.filter((p) => p.featured);
+export const productFullName = (p: Product) => `Droply ${getCategory(p.categoryId).name} – ${p.scent}`;
+export const productPath = (p: Product) => `/produkty/${p.id}`;
 
 export type Bundle = {
   id: string;
   name: string;
   subtitle: string;
   tablets: number;
+  bottles: number;
   price: number;
-  compareAt: number;
-  perTablet: number;
   highlight?: boolean;
   ribbon?: string;
   perks: string[];
 };
 
+/** Koľko by stál obsah balíčka pri nákupe po kusoch (skutočný výpočet, nie vymyslená „pôvodná cena“). */
+export const bundleSeparatePrice = (b: Bundle) => (b.tablets / PACK_TABLETS) * PACK_PRICE + b.bottles * SHOP.bottlePrice;
+
 export const bundles: Bundle[] = [
   {
     id: "starter",
     name: "Skúšobný",
-    subtitle: "Na vyskúšanie, či si Droply zamilujete",
+    subtitle: "Na vyskúšanie, či ti Droply sadne",
     tablets: 10,
+    bottles: 1,
     price: 9.9,
-    compareAt: 14.9,
-    perTablet: 0.99,
-    perks: ["10 tabliet podľa výberu", "1 dávkovacia fľaša ZDARMA", "Doručenie do 2 dní"],
+    perks: ["10 tabliet podľa výberu", "1 fľaša s rozprašovačom v cene", `Odoslanie ${SHOP.dispatch}`],
   },
   {
     id: "home",
     name: "Domácnosť",
-    subtitle: "Najčastejšia voľba slovenských domácností",
+    subtitle: "Na kuchyňu, kúpeľňu aj okná",
     tablets: 30,
-    price: 24.9,
-    compareAt: 44.9,
-    perTablet: 0.83,
+    bottles: 2,
+    price: 25.9,
     highlight: true,
-    ribbon: "Najobľúbenejšie · najlepšia cena",
-    perks: [
-      "30 tabliet – ľubovoľná kombinácia",
-      "2 dávkovacie fľaše ZDARMA",
-      "Doprava ZDARMA",
-      "Eko sprievodca domácnosťou (PDF)",
-    ],
+    ribbon: "Najlepší pomer ceny",
+    perks: ["30 tabliet – ľubovoľná kombinácia", "2 fľaše s rozprašovačom v cene", "Doprava zdarma"],
   },
   {
     id: "family",
     name: "Rodinný",
-    subtitle: "Maximálna úspora pre veľkú domácnosť",
+    subtitle: "Pre veľkú domácnosť na dlhšie",
     tablets: 60,
+    bottles: 3,
     price: 44.9,
-    compareAt: 89.9,
-    perTablet: 0.75,
-    ribbon: "Najväčšia úspora",
-    perks: [
-      "60 tabliet – ľubovoľná kombinácia",
-      "3 dávkovacie fľaše ZDARMA",
-      "Doprava ZDARMA",
-      "Prednostná zákaznícka podpora",
-    ],
-  },
-];
-
-export type Review = {
-  name: string;
-  city: string;
-  rating: number;
-  text: string;
-  verified: boolean;
-};
-
-export const reviews: Review[] = [
-  {
-    name: "Lucia H.",
-    city: "Bratislava",
-    rating: 5,
-    text: "Konečne nemusím tahať ťažké fľaše z obchodu. Objednám balíček tabliet, hodím do vody a mám plný rozprašovač. Voňavé a naozaj čistí!",
-    verified: true,
-  },
-  {
-    name: "Martin K.",
-    city: "Košice",
-    rating: 5,
-    text: "Kúpil som pre celú rodinu. Deti to baví sledovať, ako tableta šumí vo vode, a my šetríme plast aj peniaze. Odporúčam každému.",
-    verified: true,
-  },
-  {
-    name: "Zuzana P.",
-    city: "Žilina",
-    rating: 5,
-    text: "Pod drezom som mala 6 fliaš rôznych čističov. Teraz mám jednu krabičku tabliet a dve fľaše. Neuveriteľné, koľko miesta to ušetrí.",
-    verified: true,
-  },
-  {
-    name: "Peter D.",
-    city: "Nitra",
-    rating: 4,
-    text: "Na okná paráda, žiadne šmuhy. Trvalo mi chvíľu zvyknúť si na dávkovanie, ale výsledok je lepší než klasické spreje.",
-    verified: true,
-  },
-  {
-    name: "Andrea M.",
-    city: "Trnava",
-    rating: 5,
-    text: "Ekológia bola hlavný dôvod, prečo som skúsila. Ostala som pre vôňu a cenu. Už si klasické čističe nekúpim.",
-    verified: true,
-  },
-  {
-    name: "Tomáš V.",
-    city: "Prešov",
-    rating: 5,
-    text: "Doručenie rýchle, balenie pekné a hlavne to funguje. Kuchynský odmasťovač zvládol aj gril po lete.",
-    verified: true,
+    ribbon: "Najnižšia cena za tabletu",
+    perks: ["60 tabliet – ľubovoľná kombinácia", "3 fľaše s rozprašovačom v cene", "Doprava zdarma"],
   },
 ];
 
@@ -236,26 +219,30 @@ export type Faq = { q: string; a: string };
 export const faqs: Faq[] = [
   {
     q: "Ako Droply tablety fungujú?",
-    a: "Do dávkovacej fľaše nalejete vodu z vodovodu, vhodíte jednu šumivú tabletu a počkáte, kým sa rozpustí (cca 2 minúty). Vznikne plnohodnotný čistiaci prostriedok, ktorý čistí rovnako účinne ako klasické spreje z obchodu.",
+    a: "Do fľaše s rozprašovačom nalej 500 ml vody z vodovodu, vhoď jednu tabletu a počkaj približne 2 minúty, kým sa rozpustí. Potom nasaď rozprašovač a čistíš ako s bežným čističom. Na podlahu dáš 1 tabletu do vedra s 5 l vody.",
   },
   {
-    q: "Naozaj sú ekologickejšie?",
-    a: "Áno. Jedna tableta nahradí celú plastovú fľašu čističa. Neprevážate vodu (klasické čističe sú z ~95 % voda), znižujete emisie z dopravy a plastový obal opakovane používate. Ročne tak jedna domácnosť ušetrí desiatky plastových fliaš.",
+    q: "Na koľko čistenia vydrží jedno balenie?",
+    a: `Balenie má ${PACK_TABLETS} tabliet a z každej vznikne jedna plná fľaša čističa (500 ml), pri podlahe jedno vedro roztoku. Koľko to vydrží, závisí od toho, ako často upratuješ.`,
   },
   {
-    q: "Sú bezpečné pre deti a domáce zvieratá?",
-    a: "Formulácie sú dermatologicky testované a vyrábané v EU podľa prísnych noriem. Tablety skladujte mimo dosahu detí, rovnako ako akýkoľvek čistiaci prostriedok. Po rozpustení a použití podľa návodu sú plochy bezpečné.",
+    q: "Prečo tableta a nie hotový čistič?",
+    a: "Bežné čističe sú z veľkej časti voda. Tú máš doma z vodovodu, takže ju nemusíš niesť z obchodu ani skladovať. Domov príde malá krabička a fľašu používaš stále dokola.",
   },
   {
-    q: "Koľko vydrží jedno balenie?",
-    a: "Jedna tableta = jedna plná fľaša čističa (500 ml). Balenie 10 tabliet teda nahradí 5–6 klasických fliaš. Priemernej domácnosti vydrží balíček Domácnosť (30 tabliet) približne 3–4 mesiace.",
+    q: "Sú bezpečné pre deti a zvieratá?",
+    a: "Je to čistiaci prostriedok, preto tablety aj hotový roztok skladuj mimo dosahu detí a zvierat. Zloženie a bezpečnostné upozornenia nájdeš pri každom produkte a na obale.",
+  },
+  {
+    q: "Ako dlho vydrží namiešaný čistič?",
+    a: "Odporúčame ho spotrebovať do mesiaca. Fľašu skladuj zatvorenú a mimo priameho slnka.",
   },
   {
     q: "Čo ak mi to nebude vyhovovať?",
-    a: "Máte 30 dní na vrátenie. Ak nebudete spokojní z akéhokoľvek dôvodu, vrátime vám peniaze – bez otázok. Riziko je na nás.",
+    a: `Tovar môžeš vrátiť do ${SHOP.returnDays} dní od doručenia. Podrobnosti sú v reklamačnom poriadku.`,
   },
   {
     q: "Ako prebieha doručenie?",
-    a: "Objednávky odosielame do 24 hodín a doručenie na Slovensku trvá 1–2 pracovné dni. Pri objednávke nad 25 € máte dopravu úplne zdarma.",
+    a: `Objednávky odosielame ${SHOP.dispatch} cez ${SHOP.shippingCarrier}. Doprava stojí ${SHOP.shippingPrice.toLocaleString("sk-SK", { minimumFractionDigits: 2 })} €, pri objednávke od ${SHOP.freeShippingFrom} € je zadarmo.`,
   },
 ];

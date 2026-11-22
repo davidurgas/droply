@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Check, Crown, Zap } from "lucide-react";
-import { bundles, type Bundle } from "@/lib/droply-data";
-import Countdown from "./Countdown";
+import { bundles, bundleSeparatePrice, type Bundle } from "@/lib/droply-data";
+import { SHOP, eur } from "@/lib/shop-config";
 import Reveal from "./Reveal";
 import BundleBuilder from "./BundleBuilder";
 
@@ -36,15 +36,15 @@ function BundleCard({ bundle, onSelect }: { bundle: Bundle; onSelect: () => void
         <span className="font-display text-4xl font-extrabold">
           {bundle.price.toLocaleString("sk-SK", { minimumFractionDigits: 2 })} €
         </span>
-        <span className="mb-1 text-base text-muted-foreground line-through">
-          {bundle.compareAt.toLocaleString("sk-SK", { minimumFractionDigits: 2 })} €
-        </span>
+
       </div>
       <div className="mt-1 text-sm text-muted-foreground">
-        {bundle.tablets} tabliet ·{" "}
-        <strong className="text-eco">
-          {bundle.perTablet.toLocaleString("sk-SK", { minimumFractionDigits: 2 })} € / tableta
-        </strong>
+        {bundle.tablets} tabliet + {bundle.bottles} {bundle.bottles === 1 ? "fľaša" : "fľaše"} ·{" "}
+        <strong className="text-eco">{eur(bundle.price / bundle.tablets)} / tableta s fľašami v cene</strong>
+      </div>
+      <div className="mt-1 text-sm text-muted-foreground">
+        Po kusoch by si zaplatil {eur(bundleSeparatePrice(bundle))}, ušetríš{" "}
+        <strong className="text-foreground">{eur(bundleSeparatePrice(bundle) - bundle.price)}</strong>
       </div>
 
       <ul className="mt-6 space-y-3 text-sm">
@@ -77,17 +77,13 @@ export default function Bundles() {
       <div className="container-tight">
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Balíčky</span>
-          <h2 className="mt-3 font-display text-3xl font-bold sm:text-5xl">
+          <h1 className="mt-3 font-display text-3xl font-bold sm:text-5xl">
             Vyber si balíček a <span className="font-accent text-primary">začni šetriť</span>
-          </h2>
+          </h1>
 
-          {/* urgentnosť */}
-          <div className="mt-6 inline-flex flex-col items-center gap-3 rounded-2xl border border-sunny/30 bg-sunny/10 px-6 py-4 sm:flex-row">
-            <span className="text-sm font-semibold text-foreground">
-              Uvádzacia ponuka končí o:
-            </span>
-            <Countdown />
-          </div>
+          <p className="mt-4 text-muted-foreground">
+            Tablety si v balíčku poskladáš ľubovoľne. Čím väčší balíček, tým nižšia cena za tabletu a fľaše sú v cene.
+          </p>
         </Reveal>
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
@@ -99,7 +95,7 @@ export default function Bundles() {
         </div>
 
         <p className="mt-8 text-center text-sm text-muted-foreground">
-          Klikni na balíček a naklikaj si, koľko ktorých tabliet chceš. Dávkovacia fľaša je v cene.
+          Klikni na balíček a naklikaj si, koľko ktorých tabliet chceš.
         </p>
       </div>
 

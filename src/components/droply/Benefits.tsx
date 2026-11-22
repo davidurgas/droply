@@ -5,12 +5,12 @@ const BENEFITS = [
   {
     icon: Leaf,
     title: "Šetríš planétu",
-    text: "Jedna tableta = o jednu plastovú fľašu menej. Neprepravuješ vodu, znižuješ emisie aj odpad.",
+    text: "Jedna fľaša slúži roky, nekupuješ novú plastovú pri každom nákupe. Vodu nevozíš, máš ju z vodovodu.",
     tint: "bg-eco/10 text-eco",
   },
   {
     icon: Boxes,
-    title: "Zaberie 10× menej miesta",
+    title: "Zaberie menej miesta",
     text: "Celá zásoba čističov sa zmestí do malej krabičky. Koniec neporiadku pod drezom.",
     tint: "bg-primary/10 text-primary",
   },
@@ -23,19 +23,19 @@ const BENEFITS = [
   {
     icon: PiggyBank,
     title: "Ušetríš peniaze",
-    text: "Neplatíš za vodu ani za plast navyše. Jedna tableta nahradí 5–6 klasických fliaš.",
+    text: "Neplatíš za vodu ani za novú fľašu. Z jednej tablety je plná fľaša čističa.",
     tint: "bg-sunny/15 text-sunny",
   },
   {
     icon: Sparkles,
     title: "Rovnako účinné",
-    text: "Rovnaká čistiaca sila ako bežné spreje. Len bez kompromisov voči prírode.",
+    text: "Hotový roztok používaš ako bežný sprej. Na každý druh špiny máš vlastnú tabletu.",
     tint: "bg-primary/10 text-primary",
   },
   {
     icon: ShieldCheck,
-    title: "Bezpečné a voňavé",
-    text: "Dermatologicky testované formulácie, bez fosfátov a mikroplastov. Sviežа vôňa navyše.",
+    title: "Vieš, čo kupuješ",
+    text: "Pri každom produkte nájdeš zloženie, návod a na čo sa nehodí. Vyber si s vôňou alebo bez parfumu.",
     tint: "bg-eco/10 text-eco",
   },
 ];
@@ -52,7 +52,7 @@ export default function Benefits() {
             </h2>
           </div>
           <p className="max-w-xs text-sm text-muted-foreground">
-            Klasické čistiace prostriedky sú z ~95 % voda balená v plaste. Droply mení pravidlá hry.
+            Bežné čističe sú z veľkej časti voda v plastovej fľaši. Vodu máš doma, tak si ju nemusíš kupovať.
           </p>
         </Reveal>
 

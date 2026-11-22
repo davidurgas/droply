@@ -24,20 +24,20 @@ export default function EcoImpact() {
 
       <div className="container-tight relative">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent-glow">Náš spoločný dopad</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent-glow">Jedna domácnosť za rok</span>
           <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl">
-            Malé tablety, ktoré menia veľké čísla
+            Čo sa zmení, keď prejdeš na tablety
           </h2>
           <p className="mt-3 text-white/75">
-            Spolu so zákazníkmi Droply postupne uberáme planéte plastovú záťaž. Toto je náš doterajší dopad.
+            Orientačný odhad pre domácnosť, ktorá minie 4 fľaše čističa mesačne. Vlastné číslo si spočítaš v kalkulačke vyššie.
           </p>
         </div>
 
         <div className="mt-14 grid grid-cols-2 gap-8 lg:grid-cols-4">
-          <Stat target={128540} label="nahradených plastových fliaš" />
-          <Stat target={11.5} decimals={1} suffix=" t" label="ušetreného plastu" />
-          <Stat target={64270} suffix=" l" label="vody neprepravenej zbytočne" />
-          <Stat target={10} suffix="k+" label="spokojných domácností" />
+          <Stat target={48} label="nových plastových fliaš, ktoré nekúpiš" />
+          <Stat target={4.3} decimals={1} suffix=" kg" label="plastu menej" />
+          <Stat target={24} suffix=" l" label="vody, ktorú nenesieš z obchodu" />
+          <Stat target={1} label="fľaša na každý druh čističa" />
         </div>
       </div>
     </section>

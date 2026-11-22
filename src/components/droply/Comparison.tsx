@@ -5,9 +5,9 @@ const ROWS = [
   { label: "Plastový odpad", classic: "Nová fľaša pri každom kúpení", droply: "1 fľašu používaš stále dokola" },
   { label: "Hmotnosť pri nákupe", classic: "Ťaháš litre vody domov", droply: "Ľahká tableta príde poštou" },
   { label: "Miesto v skrini", classic: "Rad fliaš pod drezom", droply: "Malá krabička" },
-  { label: "Zloženie", classic: "~95 % voda + plast", droply: "Koncentrát bez zbytočnej vody" },
+  { label: "Zloženie", classic: "Väčšinou voda v plastovej fľaši", droply: "Koncentrát bez zbytočnej vody" },
   { label: "Uhlíková stopa dopravy", classic: "Vysoká (prepravuje sa voda)", droply: "Nízka (ľahké a malé)" },
-  { label: "Cena za použitie", classic: "Vyššia", droply: "Nižšia" },
+  { label: "Cena za použitie", classic: "Platíš aj za vodu a fľašu", droply: "Platíš len za tabletu" },
 ];
 
 export default function Comparison() {

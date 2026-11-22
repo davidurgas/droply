@@ -7,15 +7,16 @@ import {
 import { faqs } from "@/lib/droply-data";
 import Reveal from "./Reveal";
 
-export default function Faq() {
+export default function Faq({ asPage = false }: { asPage?: boolean }) {
+  const H = asPage ? "h1" : "h2";
   return (
     <section id="faq" className="relative py-20 sm:py-24">
       <div className="container-tight max-w-3xl">
         <Reveal className="text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Časté otázky</span>
-          <h2 className="mt-3 font-display text-3xl font-bold sm:text-5xl">
+          <H className="mt-3 font-display text-3xl font-bold sm:text-5xl">
             Ešte váhaš? <span className="font-accent text-primary">Máme odpovede.</span>
-          </h2>
+          </H>
         </Reveal>
 
         <Reveal className="mt-10">

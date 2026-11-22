@@ -3,6 +3,7 @@ import { Gift, ArrowRight, Check } from "lucide-react";
 import { toast } from "sonner";
 import Bubbles from "./Bubbles";
 import Reveal from "./Reveal";
+import { track } from "@/lib/analytics";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ export default function Newsletter() {
       return;
     }
     setDone(true);
+    track("Lead", { content_name: "newsletter" });
     toast.success("Hotovo! Tvoj zľavový kód je DROPLY10");
   };
 
@@ -61,7 +63,7 @@ export default function Newsletter() {
                 </button>
               </form>
             )}
-            <p className="mt-3 text-xs text-white/50">Už viac ako 10 000 domácností odoberá naše tipy.</p>
+            <p className="mt-3 text-xs text-white/50">Odhlásiť sa môžeš jedným klikom v každom e-maile.</p>
           </div>
         </Reveal>
       </div>

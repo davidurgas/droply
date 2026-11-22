@@ -12,6 +12,9 @@ import HowPage from "./pages/HowPage";
 import PricingPage from "./pages/PricingPage";
 import ReviewsPage from "./pages/ReviewsPage";
 import NotFound from "./pages/NotFound";
+import ProductPage from "./pages/ProductPage";
+import FaqPage from "./pages/FaqPage";
+import LegalPage from "./pages/LegalPage";
 
 const queryClient = new QueryClient();
 
@@ -29,9 +32,14 @@ const App = () => (
                 <Route path="/produkty" element={<ProductsPage />} />
                 <Route path="/ako-funguje" element={<HowPage />} />
                 <Route path="/balicky" element={<PricingPage />} />
+                <Route path="/produkty/:id" element={<ProductPage />} />
                 <Route path="/recenzie" element={<ReviewsPage />} />
+                <Route path="/otazky" element={<FaqPage />} />
+                <Route path="/obchodne-podmienky" element={<LegalPage kind="podmienky" />} />
+                <Route path="/ochrana-udajov" element={<LegalPage kind="udaje" />} />
+                <Route path="/reklamacie" element={<LegalPage kind="reklamacie" />} />
+                <Route path="*" element={<NotFound />} />
               </Route>
-              <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </CartProvider>

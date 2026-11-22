@@ -1,6 +1,7 @@
 import { Instagram, Facebook, Mail, Leaf } from "lucide-react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
+import { SHOP } from "@/lib/shop-config";
 
 const COLS = [
   {
@@ -9,25 +10,25 @@ const COLS = [
       { label: "Produkty", to: "/produkty" },
       { label: "Balíčky", to: "/balicky" },
       { label: "Ako to funguje", to: "/ako-funguje" },
-      { label: "Recenzie", to: "/recenzie" },
+      { label: "Časté otázky", to: "/otazky" },
     ],
   },
   {
     title: "Droply",
     links: [
-      { label: "Prečo Droply", to: "/" },
-      { label: "Kalkulačka úspor", to: "/ako-funguje" },
-      { label: "Časté otázky", to: "/balicky" },
-      { label: "Podľa kategórie", to: "/produkty" },
+      { label: "Prečo Droply", to: "/#vyhody" },
+      { label: "Kalkulačka úspor", to: "/ako-funguje#kalkulacka" },
+      { label: "Recenzie", to: "/recenzie" },
+      { label: "Kontakt", to: "/otazky#kontakt" },
     ],
   },
   {
     title: "Podpora",
     links: [
-      { label: "Doprava a platba", to: "/balicky" },
-      { label: "Vrátenie tovaru", to: "/balicky" },
-      { label: "Obchodné podmienky", to: "#" },
-      { label: "Ochrana súkromia", to: "#" },
+      { label: "Doprava a platba", to: "/otazky" },
+      { label: "Reklamácie a vrátenie", to: "/reklamacie" },
+      { label: "Obchodné podmienky", to: "/obchodne-podmienky" },
+      { label: "Ochrana osobných údajov", to: "/ochrana-udajov" },
     ],
   },
 ];
@@ -43,12 +44,16 @@ export default function Footer() {
               Šumivé čistiace tablety rozpustné vo vode. Menej plastu, menej miesta, menej nosenia. Rovnaká čistota.
             </p>
             <div className="mt-5 flex gap-3">
-              {[Instagram, Facebook, Mail].map((Icon, i) => (
+              {[
+                { Icon: Instagram, href: "https://www.instagram.com/", label: "Instagram" },
+                { Icon: Facebook, href: "https://www.facebook.com/", label: "Facebook" },
+                { Icon: Mail, href: `mailto:${SHOP.email}`, label: `E-mail ${SHOP.email}` },
+              ].map(({ Icon, href, label }) => (
                 <a
-                  key={i}
-                  href="#"
+                  key={label}
+                  href={href}
                   className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-accent hover:text-accent-foreground"
-                  aria-label="Sociálna sieť"
+                  aria-label={label}
                 >
                   <Icon className="h-4 w-4" />
                 </a>
@@ -58,7 +63,7 @@ export default function Footer() {
 
           {COLS.map((col) => (
             <div key={col.title}>
-              <h4 className="font-display text-sm font-bold uppercase tracking-wider text-white/80">{col.title}</h4>
+              <h2 className="font-display text-sm font-bold uppercase tracking-wider text-white/80">{col.title}</h2>
               <ul className="mt-4 space-y-2.5">
                 {col.links.map((l) => (
                   <li key={l.label}>
@@ -79,10 +84,10 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-sm text-white/50 sm:flex-row">
-          <span>© {new Date().getFullYear()} Droply. Všetky práva vyhradené.</span>
+          <span>© {new Date().getFullYear()} Droply. {SHOP.company}</span>
           <span className="inline-flex items-center gap-1.5">
             <Leaf className="h-4 w-4 text-eco" />
-            Vyrobené s ohľadom na planétu · demo eshop
+            {SHOP.launched ? SHOP.email : "Ukážka e-shopu, objednávky zatiaľ neprijímame"}
           </span>
         </div>
       </div>

@@ -2,13 +2,15 @@ import { useState } from "react";
 import { X, Plus, Minus, Trash2, ShoppingBag, Truck, Check, Lock, Tag, ShieldCheck, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { useCart, FREE_SHIPPING_THRESHOLD } from "./cart-context";
-import { useAccount } from "./account-context";
+import { SHOP } from "@/lib/shop-config";
+import { track } from "@/lib/analytics";
+import CheckoutPanel from "./CheckoutPanel";
 
 export default function CartDrawer() {
   const { items, isOpen, closeCart, setQty, remove, total, count, clear, shipping, discount, discountCode, grandTotal, applyCode, removeCode } =
     useCart();
-  const { user, placeOrder, openAccount } = useAccount();
   const [code, setCode] = useState("");
+  const [step, setStep] = useState<"cart" | "checkout">("cart");
 
   const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - total);
   const shippingPct = Math.min(100, (total / FREE_SHIPPING_THRESHOLD) * 100);
@@ -23,22 +25,8 @@ export default function CartDrawer() {
   const eur = (n: number) => `${n.toLocaleString("sk-SK", { minimumFractionDigits: 2 })} €`;
 
   const checkout = () => {
-    if (!user) {
-      toast.info("Prihlás sa alebo si vytvor účet, aby sa objednávka uložila do histórie.");
-      closeCart();
-      openAccount();
-      return;
-    }
-    const order = placeOrder(
-      items.map((i) => ({ name: i.name, qty: i.qty, price: i.price, meta: i.meta })),
-      grandTotal,
-    );
-    toast.success(`Objednávka ${order ? "#" + order.id : ""} vytvorená! (demo)`, {
-      description: "Nájdeš ju vo svojom účte. Platobná brána zatiaľ nie je aktívna.",
-    });
-    clear();
-    closeCart();
-    openAccount();
+    track("InitiateCheckout", { value: grandTotal, num_items: count });
+    setStep("checkout");
   };
 
   return (
@@ -55,7 +43,7 @@ export default function CartDrawer() {
       {/* panel */}
       <aside
         className={`fixed right-0 top-0 z-[70] flex h-full w-full max-w-md flex-col bg-background shadow-hover transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+          isOpen ? "translate-x-0" : "invisible translate-x-full shadow-none"
         }`}
         role="dialog"
         aria-label="Nákupný košík"
@@ -70,7 +58,9 @@ export default function CartDrawer() {
           </button>
         </header>
 
-        {items.length === 0 ? (
+        {step === "checkout" ? (
+          <CheckoutPanel onBack={() => setStep("cart")} />
+        ) : items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
             <div className="grid h-16 w-16 place-items-center rounded-full bg-muted">
               <ShoppingBag className="h-7 w-7 text-muted-foreground" />
@@ -112,9 +102,11 @@ export default function CartDrawer() {
             <div className="flex-1 space-y-3 overflow-y-auto p-4">
               {items.map((item) => (
                 <div key={item.id} className="flex gap-3 rounded-2xl border border-border bg-card p-3">
-                  <div className="grid h-16 w-16 shrink-0 place-items-center rounded-xl bg-water-gradient text-xs font-bold text-white">
-                    Droply
-                  </div>
+                  {item.image ? (
+                    <img src={item.image} alt="" className="h-16 w-16 shrink-0 rounded-xl object-cover" loading="lazy" />
+                  ) : (
+                    <div className="grid h-16 w-16 shrink-0 place-items-center rounded-xl bg-water-gradient text-xs font-bold text-white">Droply</div>
+                  )}
                   <div className="flex flex-1 flex-col">
                     <div className="flex items-start justify-between gap-2">
                       <div>
@@ -161,7 +153,7 @@ export default function CartDrawer() {
                   <input
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
-                    placeholder="Zľavový kód (napr. DROPLY10)"
+                    placeholder="Zľavový kód"
                     className="min-w-0 flex-1 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-sm outline-none focus:border-primary"
                   />
                   <button type="submit" className="rounded-xl bg-secondary px-4 py-2.5 text-sm font-semibold text-secondary-foreground">
@@ -197,14 +189,14 @@ export default function CartDrawer() {
                 className="btn-sheen flex w-full items-center justify-center gap-2 rounded-full bg-water-gradient py-3.5 font-semibold text-white shadow-glow transition-transform hover:scale-[1.02]"
               >
                 <Lock className="h-4 w-4" />
-                Prejsť k pokladni
+                Pokračovať k doručeniu
               </button>
 
               {/* dôvera */}
               <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1"><RotateCcw className="h-3.5 w-3.5 text-eco" /> 30 dní na vrátenie</span>
-                <span className="inline-flex items-center gap-1"><ShieldCheck className="h-3.5 w-3.5 text-eco" /> Bezpečná platba</span>
-                <span className="inline-flex items-center gap-1"><Truck className="h-3.5 w-3.5 text-eco" /> Doručenie 1–2 dni</span>
+                <span className="inline-flex items-center gap-1"><RotateCcw className="h-3.5 w-3.5 text-eco" /> {SHOP.returnDays} dní na vrátenie</span>
+                <span className="inline-flex items-center gap-1"><ShieldCheck className="h-3.5 w-3.5 text-eco" /> Kartou, prevodom aj dobierkou</span>
+                <span className="inline-flex items-center gap-1"><Truck className="h-3.5 w-3.5 text-eco" /> Odoslanie {SHOP.dispatch}</span>
               </div>
             </footer>
           </>

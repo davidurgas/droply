@@ -33,7 +33,7 @@ export default function AccountDrawer() {
 
       <aside
         className={`fixed right-0 top-0 z-[70] flex h-full w-full max-w-md flex-col bg-background shadow-hover transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+          isOpen ? "translate-x-0" : "invisible translate-x-full shadow-none"
         }`}
         role="dialog"
         aria-label="Môj účet"

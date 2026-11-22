@@ -1,4 +1,6 @@
-import { createContext, useContext, useMemo, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useMemo, useState, ReactNode, useCallback, useEffect } from "react";
+import { SHOP } from "@/lib/shop-config";
+import { track } from "@/lib/analytics";
 
 export type CartItem = {
   id: string;
@@ -6,6 +8,7 @@ export type CartItem = {
   price: number;
   qty: number;
   meta?: string;
+  image?: string;
 };
 
 type ApplyResult = { ok: boolean; message: string };
@@ -30,8 +33,18 @@ type CartCtx = {
   clear: () => void;
 };
 
-const FREE_SHIPPING_THRESHOLD = 25;
-const SHIPPING_FEE = 3.99;
+const FREE_SHIPPING_THRESHOLD = SHOP.freeShippingFrom;
+const SHIPPING_FEE = SHOP.shippingPrice;
+const STORE_KEY = "droply-cart";
+
+function loadItems(): CartItem[] {
+  try {
+    const v = JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
+    return Array.isArray(v) ? v : [];
+  } catch {
+    return [];
+  }
+}
 
 /** Demo zľavové kódy (percentuálna zľava z medzisúčtu). */
 const CODES: Record<string, number> = {
@@ -42,7 +55,15 @@ const CODES: Record<string, number> = {
 const Ctx = createContext<CartCtx | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(loadItems);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(items));
+    } catch {
+      /* bez ukladania */
+    }
+  }, [items]);
   const [isOpen, setIsOpen] = useState(false);
   const [discountCode, setDiscountCode] = useState<string | null>(null);
 
@@ -54,6 +75,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...item, qty }];
     });
+    track("AddToCart", { content_ids: [item.id], content_name: item.name, value: item.price * qty, content_type: "product" });
     setIsOpen(true);
   }, []);
 

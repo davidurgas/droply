@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Recycle, Weight, Wallet, Droplets } from "lucide-react";
 import Reveal from "./Reveal";
+import { SHOP, eur } from "@/lib/shop-config";
+import { PACK_PRICE, perTablet } from "@/lib/droply-data";
 
 // priemerné hodnoty pre výpočet dopadu
 const PLASTIC_PER_BOTTLE_G = 90; // g plastu na jednu fľašu čističa
 const WEIGHT_PER_BOTTLE_KG = 0.55; // kg (voda + obal), ktoré netreba niesť
-const CLASSIC_PRICE = 2.6; // € za klasickú fľašu
-const TABLET_PRICE = 0.9; // € za tabletu Droply
+const CLASSIC_PRICE = SHOP.classicBottlePrice; // € za bežný čistič 500 ml
+const TABLET_PRICE = perTablet(PACK_PRICE); // € za tabletu Droply
 
 export default function SavingsCalculator() {
   const [perMonth, setPerMonth] = useState(4); // koľko fliaš čističa domácnosť spotrebuje mesačne
@@ -44,7 +46,7 @@ export default function SavingsCalculator() {
   ];
 
   return (
-    <section className="relative overflow-hidden py-20 sm:py-24">
+    <section id="kalkulacka" className="relative scroll-mt-28 overflow-hidden py-20 sm:py-24">
       <div className="container-tight">
         <Reveal className="rounded-3xl border border-border bg-gradient-to-br from-primary/5 via-accent/5 to-eco/5 p-8 shadow-card sm:p-12">
           <div className="mx-auto max-w-2xl text-center">
@@ -94,7 +96,7 @@ export default function SavingsCalculator() {
           </div>
 
           <p className="mt-6 text-center text-xs text-muted-foreground">
-            * Orientačný výpočet na základe priemernej plastovej fľaše čističa (~90 g plastu, 0,5 l).
+            * Orientačný výpočet: plastová fľaša čističa 0,5 l s ~90 g plastu, bežný čistič za {eur(CLASSIC_PRICE)}, tableta Droply za {eur(TABLET_PRICE)} pri balení po 10 kusoch.
           </p>
         </Reveal>
       </div>

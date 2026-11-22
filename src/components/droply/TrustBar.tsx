@@ -1,13 +1,14 @@
-import { Leaf, ShieldCheck, Recycle, FlaskConical, Truck, Heart, Sparkles } from "lucide-react";
+import { Droplets, RotateCcw, Recycle, CreditCard, Truck, Package, Sparkles } from "lucide-react";
+import { SHOP } from "@/lib/shop-config";
 
 const ITEMS = [
-  { icon: Leaf, label: "Vyrobené v EU" },
-  { icon: Recycle, label: "100 % recyklovateľné obaly" },
-  { icon: FlaskConical, label: "Dermatologicky testované" },
-  { icon: ShieldCheck, label: "Bez fosfátov a mikroplastov" },
-  { icon: Truck, label: "Odoslanie do 24 h" },
-  { icon: Heart, label: "10 000+ spokojných domácností" },
-  { icon: Sparkles, label: "Rovnaká čistiaca sila" },
+  { icon: Truck, label: `Doprava zdarma od ${SHOP.freeShippingFrom} €` },
+  { icon: Package, label: `Odoslanie ${SHOP.dispatch}` },
+  { icon: RotateCcw, label: `${SHOP.returnDays} dní na vrátenie` },
+  { icon: Droplets, label: "1 tableta = 500 ml čističa" },
+  { icon: Recycle, label: "Jedna fľaša na roky" },
+  { icon: CreditCard, label: "Kartou, prevodom aj dobierkou" },
+  { icon: Sparkles, label: "Zloženie pri každom produkte" },
 ];
 
 export default function TrustBar() {

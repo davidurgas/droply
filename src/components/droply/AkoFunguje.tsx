@@ -17,7 +17,7 @@ const STEPS = [
   {
     icon: Wand2,
     title: "Čisti ako zvyčajne",
-    text: "O dve minúty máš plnohodnotný čistiaci prostriedok. Rovnaký výkon, zlomkový dopad na planétu.",
+    text: "Asi o dve minúty máš hotový čistič. Nasadíš rozprašovač a čistíš ako zvyčajne.",
   },
 ];
 
@@ -57,9 +57,9 @@ export default function AkoFunguje() {
       <div className="container-tight">
         <Reveal className="mx-auto mb-14 max-w-2xl text-center">
           <span className="kicker justify-center">Ako to funguje</span>
-          <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight sm:text-5xl">
+          <h1 className="mt-4 font-display text-3xl font-extrabold leading-tight sm:text-5xl">
             Tri kroky k <span className="font-accent">čistej</span> domácnosti
-          </h2>
+          </h1>
         </Reveal>
 
         <div className="grid items-center gap-10 lg:grid-cols-2">
